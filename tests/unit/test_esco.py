@@ -133,3 +133,36 @@ def test_hybrid_recommender(sample_taxonomy):
     # Verify mathematical reconstruction of final_score = alpha * norm_ml + (1 - alpha) * esco
     expected_score = round(0.6 * rec.normalized_ml_score + 0.4 * rec.esco_score, 4)
     assert rec.final_score == expected_score
+
+
+def test_score_decomposition_invariants(sample_taxonomy):
+    """Verify that when alpha=1.0, final_score == normalized_ml_score exactly, and for alpha=0.0, final_score == esco_score."""
+    target_classes = ["Network Security Engineer", "Software Developer", "Database Administrator"]
+    X_train = pd.DataFrame(np.random.randn(20, 5), columns=[f"f_{i}" for i in range(5)])
+    y_train = np.random.randint(0, 3, size=20)
+
+    model = XGBClassifier(n_estimators=5, random_state=42, eval_metric="mlogloss")
+    model.fit(X_train, y_train)
+
+    vindex = ESCOVectorIndex(taxonomy=sample_taxonomy)
+    vindex.build_skill_index()
+
+    recommender = HybridRecommender(
+        ml_model=model,
+        target_classes=target_classes,
+        taxonomy=sample_taxonomy,
+    )
+
+    profile = {"Database Fundamentals": 9.0, "Computer Networks": 8.5}
+    X_sample = X_train.iloc[[0]]
+
+    # Test alpha = 1.0 (ML-only selected config)
+    recs_ml = recommender.recommend_for_profile(X_sample, profile, top_k=3, alpha_override=1.0)
+    for rec in recs_ml:
+        assert rec.final_score == rec.normalized_ml_score, f"Expected final_score {rec.normalized_ml_score}, got {rec.final_score}"
+
+    # Test alpha = 0.0 (ESCO-only config)
+    recs_esco = recommender.recommend_for_profile(X_sample, profile, top_k=3, alpha_override=0.0)
+    for rec in recs_esco:
+        assert rec.final_score == rec.esco_score, f"Expected final_score {rec.esco_score}, got {rec.final_score}"
+

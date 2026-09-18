@@ -68,3 +68,7 @@ secrets.json
 # CatBoost Temp Info
 catboost_info/
 
+# Scratch Scripts
+scratch/
+
+
