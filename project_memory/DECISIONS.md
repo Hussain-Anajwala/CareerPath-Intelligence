@@ -115,3 +115,17 @@
   - **Pydantic v2 Schemas**: Strict request/response schemas (`RecommendRequest`, `SkillGapRequest`, `WhatIfRequest`, `HealthResponse`) with input validation ($0.0 \le \text{rating} \le 10.0$).
 - **Reasoning**: Enforcing pipeline identity guarantees that What-If simulation outputs reflect real model and taxonomy scoring dynamics. A clean FastAPI REST API decouples business logic from presentation UI.
 - **Consequences**: The upcoming Streamlit presentation UI (Phase 7) will consume these FastAPI REST endpoints directly.
+
+---
+
+## ADR-0009: Streamlit Presentation UI & Service Client Dual Fallback Architecture
+
+- **Status**: Accepted
+- **Date**: 2026-09-18
+- **Context**: Phase 7 requires building an interactive, portfolio-grade Streamlit presentation UI (`app.py`, `pages/`) consuming the backend service layer without duplicating ML or taxonomy scoring logic.
+- **Chosen Approach**:
+  - **UI Architecture**: Multi-page Streamlit application (`app.py` Executive Dashboard, `pages/1_Profile_Assessment.py`, `2_Career_Explorer.py`, `3_Skill_Gap.py`, `4_What_If_Lab.py`, `5_Methodology.py`, `6_About.py`).
+  - **Unified Service Client**: `ServiceClient` (`src/careerpath/ui/client.py`) supporting HTTP calls to `CAREERPATH_API_URL` (FastAPI backend) with automatic, seamless fallback to direct local Python backend singletons if HTTP API is offline.
+  - **Responsible AI UX**: Clear score interpretation tooltips, decomposable evidence views (ML signal, ESCO alignment, matched/missing skills), and non-causal decision-support disclaimers.
+- **Reasoning**: Dual connection capability ensures that the UI works seamlessly whether running against a live FastAPI server or running standalone. Separating presentation from backend service logic maintains clean modular monolith architecture.
+- **Consequences**: Complete portfolio-grade system ready for open-source distribution and technical demonstration.

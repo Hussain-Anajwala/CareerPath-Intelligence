@@ -64,3 +64,7 @@ models/*
 .env
 .env.*
 secrets.json
+
+# CatBoost Temp Info
+catboost_info/
+

@@ -1,7 +1,7 @@
 """Pydantic v2 schemas for FastAPI service layer requests and responses."""
 
 from typing import Dict, Any, List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class HealthResponse(BaseModel):
@@ -16,6 +16,8 @@ class HealthResponse(BaseModel):
 class StudentProfileSchema(BaseModel):
     """Raw student profile attributes schema."""
 
+    model_config = ConfigDict(populate_by_name=True)
+
     database_fundamentals: float = Field(default=5.0, ge=0.0, le=10.0, alias="Database Fundamentals")
     computer_networks: float = Field(default=5.0, ge=0.0, le=10.0, alias="Computer Networks")
     software_engineering: float = Field(default=5.0, ge=0.0, le=10.0, alias="Software Engineering")
@@ -26,9 +28,6 @@ class StudentProfileSchema(BaseModel):
     technical_support: float = Field(default=5.0, ge=0.0, le=10.0, alias="Technical Support")
     certifications: Optional[str] = Field(default="", description="Comma-separated or text certifications")
     interested_subjects: Optional[str] = Field(default="", description="Interested subjects or domain areas")
-
-    class Config:
-        populate_by_name = True
 
 
 class RecommendRequest(BaseModel):
@@ -67,7 +66,7 @@ class SkillGapRequest(BaseModel):
     """Request payload for target career skill gap analysis."""
 
     profile: StudentProfileSchema
-    target_career_role: str = Field(..., example="Network Security Engineer")
+    target_career_role: str = Field(..., json_schema_extra={"example": "Network Security Engineer"})
 
 
 class SkillGapResponse(BaseModel):
@@ -89,7 +88,7 @@ class WhatIfRequest(BaseModel):
     profile: StudentProfileSchema
     skill_modifications: Dict[str, float] = Field(
         ...,
-        example={"Database Fundamentals": 9.5, "Cyber Security": 9.0},
+        json_schema_extra={"example": {"Database Fundamentals": 9.5, "Cyber Security": 9.0}},
         description="Modified skill ratings to simulate",
     )
     top_k: int = Field(default=5, ge=1, le=12)
