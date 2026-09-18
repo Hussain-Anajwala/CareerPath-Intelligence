@@ -57,7 +57,7 @@ with tab3:
         - **Skill Normalization**: Student profile skill attributes (e.g., "Database Fundamentals") are embedded into 384d space and matched against ESCO skill labels.
         - **Similarity Thresholds**:
           - Matched Skill: Cosine Similarity ≥ **0.75**
-          - Partial Skill Match: Cosine Similarity **0.50 – 0.74**
+          - Partial Skill Match: Cosine Similarity **0.50 - 0.74**
           - Missing Skill: Cosine Similarity < **0.50**
         """
     )

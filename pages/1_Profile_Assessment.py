@@ -12,7 +12,7 @@ st.set_page_config(page_title="Profile Assessment — CareerPath", page_icon="�
 st.title("📝 Student Profile Assessment")
 st.markdown(
     "Provide evidence of your technical skills, academic performance, and domain interests. "
-    "All ratings follow an empirical 0–10 evidence scale."
+    "All ratings follow an empirical 0-10 evidence scale."
 )
 
 if "student_profile" not in st.session_state:
@@ -32,7 +32,7 @@ if "student_profile" not in st.session_state:
 prof = st.session_state["student_profile"]
 
 with st.form("profile_form"):
-    st.subheader("🛠️ Technical Skill Evidence (0 – 10 Scale)")
+    st.subheader("🛠️ Technical Skill Evidence (0 - 10 Scale)")
     st.caption(
         "Scale Guidance: **0** = No demonstrated evidence | **5** = Competent project evidence | **10** = Advanced mastery"
     )

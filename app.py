@@ -61,8 +61,8 @@ st.markdown(
         border-radius: 6px;
         font-size: 0.85rem;
         font-weight: 600;
-    }
     </style>
+    """,
     unsafe_allow_html=True,
 )
 
@@ -134,7 +134,7 @@ with c1:
     st.markdown(
         """
         ### 1. Assess Profile
-        Submit or adjust academic scores, technical skill evidence (0–10 scale), and domain interests.
+        Submit or adjust academic scores, technical skill evidence (0-10 scale), and domain interests.
         """,
     )
     if st.button("Go to Profile Assessment ➔", key="btn_prof"):
