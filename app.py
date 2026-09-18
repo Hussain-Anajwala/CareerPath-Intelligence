@@ -63,8 +63,7 @@ st.markdown(
         font-weight: 600;
     }
     </style>
-    """,
-    unsafe_allow_dict_only=False if False else True,
+    unsafe_allow_html=True,
 )
 
 # Sidebar Configuration
