@@ -71,7 +71,7 @@ async def lifespan(app: FastAPI):
             taxonomy=taxonomy,
             mapper=mapper,
             gap_engine=gap_engine,
-            alpha=0.5,
+            alpha=1.0,
         )
         whatif_engine = WhatIfEngine(recommender=recommender)
 
@@ -150,6 +150,10 @@ def _convert_profile_to_feature_sample(profile_dict: Dict[str, Any]) -> pd.DataF
 
     # Map raw numeric features
     raw_input = {
+        "coding skills rating": float(profile_dict.get("Coding Skills", profile_dict.get("coding skills rating", 5.0))),
+        "Logical quotient rating": float(profile_dict.get("Software Engineering", profile_dict.get("Logical quotient rating", 5.0))),
+        "hackathons": float(profile_dict.get("Database Fundamentals", profile_dict.get("hackathons", 5.0))),
+        "public speaking points": float(profile_dict.get("Computer Networks", profile_dict.get("public speaking points", 5.0))),
         "Database Fundamentals": float(profile_dict.get("Database Fundamentals", 5.0)),
         "Computer Networks": float(profile_dict.get("Computer Networks", 5.0)),
         "Software Engineering": float(profile_dict.get("Software Engineering", 5.0)),
@@ -158,6 +162,8 @@ def _convert_profile_to_feature_sample(profile_dict: Dict[str, Any]) -> pd.DataF
         "Web Development": float(profile_dict.get("Web Development", 5.0)),
         "Software Testing": float(profile_dict.get("Software Testing", 5.0)),
         "Technical Support": float(profile_dict.get("Technical Support", 5.0)),
+        "certifications": str(profile_dict.get("certifications", "")),
+        "Interested subjects": str(profile_dict.get("interested_subjects", "")),
     }
 
     # Transform raw input using fitted preprocessor if available

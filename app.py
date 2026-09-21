@@ -100,6 +100,7 @@ if "student_profile" not in st.session_state:
 
 st.sidebar.markdown("---")
 st.sidebar.subheader("👤 Active Profile")
+st.sidebar.caption("💡 *Predefined Demo Profile Loaded*")
 active_prof = st.session_state["student_profile"]
 st.sidebar.caption(f"Coding Skills: **{active_prof.get('Coding Skills', 5.0)}/10**")
 st.sidebar.caption(f"Software Engineering: **{active_prof.get('Software Engineering', 5.0)}/10**")
@@ -121,7 +122,7 @@ with col2:
 with col3:
     st.metric("Semantic Index", "FAISS + SBERT", delta="all-MiniLM-L6-v2")
 with col4:
-    st.metric("System Mode", "Hybrid ML + ESCO", delta="Zero-Cost Local")
+    st.metric("System Mode", "ML Ranking + ESCO Evidence", delta="Zero-Cost Local")
 
 st.markdown("---")
 
@@ -175,7 +176,7 @@ st.markdown("---")
 # Quick Baseline Overview Preview
 st.subheader("⚡ Quick Recommendation Preview")
 with st.spinner("Generating career intelligence preview..."):
-    recs = client.get_recommendations(st.session_state["student_profile"], top_k=3, alpha=0.5)
+    recs = client.get_recommendations(st.session_state["student_profile"], top_k=3, alpha=1.0)
 
 if recs:
     p_cols = st.columns(len(recs))

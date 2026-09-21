@@ -35,7 +35,7 @@ class RecommendRequest(BaseModel):
 
     profile: StudentProfileSchema
     top_k: int = Field(default=5, ge=1, le=12)
-    alpha: float = Field(default=0.5, ge=0.0, le=1.0, description="Fusion weight (ML vs ESCO)")
+    alpha: float = Field(default=1.0, ge=0.0, le=1.0, description="Fusion weight (ML vs ESCO)")
 
 
 class CareerRecommendationSchema(BaseModel):

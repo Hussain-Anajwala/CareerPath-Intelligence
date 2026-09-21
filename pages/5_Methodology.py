@@ -31,10 +31,13 @@ with tab1:
           - XGBoost Classifier
           - LightGBM Classifier
           - **CatBoost Classifier** (*Selected Top Performing Model*)
-        - **Evaluation Metrics**:
-          - Multiclass Accuracy & Macro F1
-          - Holdout Test Top-3 Accuracy: **25.42%**
-          - Holdout Test Top-5 Accuracy: **43.01%**
+        - **Evaluation Metrics (Evaluated on N = 1,381 Holdout Test Set)**:
+          - Top-1 Classification Accuracy: **7.60%** (0.0760)
+          - Top-3 Ranking Accuracy: **25.42%** (0.2542)
+          - Top-5 Ranking Accuracy: **43.01%** (0.4301)
+          - Macro F1 Score: **0.0744**
+          - Log Loss: **2.5151**
+          - Multiclass Brier Score: **0.9221**
         """
     )
 

@@ -33,12 +33,12 @@ with col_ctrl1:
     top_k = st.slider("Top Recommendations (K)", min_value=1, max_value=10, value=5)
 with col_ctrl2:
     alpha = st.slider(
-        "Fusion Weight α (ML Signal vs ESCO Skill Evidence)",
+        "Fusion Weight α (Exploratory Fusion Control)",
         min_value=0.0,
         max_value=1.0,
-        value=0.5,
+        value=1.0,
         step=0.1,
-        help="α = 1.0 corresponds to ML-only ranking. α = 0.0 corresponds to ESCO skill evidence ranking.",
+        help="Production configuration: α = 1.0 (Supervised ML ranking + ESCO explainability evidence). Adjust α to explore alternative hybrid scoring combinations (α = 0.0 is ESCO-only skill alignment).",
     )
 
 st.markdown("---")

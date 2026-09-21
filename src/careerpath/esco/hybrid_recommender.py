@@ -45,7 +45,7 @@ class HybridRecommender:
         taxonomy: Optional[ESCOTaxonomy] = None,
         mapper: Optional[CareerMapper] = None,
         gap_engine: Optional[SkillGapEngine] = None,
-        alpha: float = 0.5,
+        alpha: float = 1.0,
     ):
         self.ml_model = ml_model
         self.target_classes = target_classes

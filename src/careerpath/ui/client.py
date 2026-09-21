@@ -74,7 +74,7 @@ class ServiceClient:
                 taxonomy=taxonomy,
                 mapper=mapper,
                 gap_engine=gap_engine,
-                alpha=0.5,
+                alpha=1.0,
             )
             whatif_engine = WhatIfEngine(recommender=recommender)
 
@@ -101,6 +101,10 @@ class ServiceClient:
         preprocessor = self._local_backend.get("preprocessor")
 
         raw_input = {
+            "coding skills rating": float(profile_dict.get("Coding Skills", profile_dict.get("coding skills rating", 5.0))),
+            "Logical quotient rating": float(profile_dict.get("Software Engineering", profile_dict.get("Logical quotient rating", 5.0))),
+            "hackathons": float(profile_dict.get("Database Fundamentals", profile_dict.get("hackathons", 5.0))),
+            "public speaking points": float(profile_dict.get("Computer Networks", profile_dict.get("public speaking points", 5.0))),
             "Database Fundamentals": float(profile_dict.get("Database Fundamentals", 5.0)),
             "Computer Networks": float(profile_dict.get("Computer Networks", 5.0)),
             "Software Engineering": float(profile_dict.get("Software Engineering", 5.0)),
@@ -109,6 +113,8 @@ class ServiceClient:
             "Web Development": float(profile_dict.get("Web Development", 5.0)),
             "Software Testing": float(profile_dict.get("Software Testing", 5.0)),
             "Technical Support": float(profile_dict.get("Technical Support", 5.0)),
+            "certifications": str(profile_dict.get("certifications", "")),
+            "Interested subjects": str(profile_dict.get("interested_subjects", "")),
         }
 
         if preprocessor and hasattr(preprocessor, "transform"):
@@ -128,7 +134,7 @@ class ServiceClient:
         return pd.DataFrame([sample_data])
 
     def get_recommendations(
-        self, profile_dict: Dict[str, Any], top_k: int = 5, alpha: float = 0.5
+        self, profile_dict: Dict[str, Any], top_k: int = 5, alpha: float = 1.0
     ) -> List[Dict[str, Any]]:
         """Fetch career recommendations via HTTP API or local engine fallback."""
         payload = {
