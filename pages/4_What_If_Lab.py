@@ -1,4 +1,4 @@
-"""Page 4 — Interactive What-If Simulation Lab.
+"""Page 4 — What-If Simulation.
 
 Flagship UI feature allowing users to simulate hypothetical skill acquisition, observe
 before-vs-after career ranking deltas, score shifts, and reduced skill gaps.
@@ -8,27 +8,30 @@ import os
 import streamlit as st
 import pandas as pd
 from careerpath.ui.client import ServiceClient
+from careerpath.ui.theme import inject_theme
 
 st.set_page_config(page_title="What-If Lab — CareerPath", page_icon="🧪", layout="wide")
 
-st.title("🧪 Interactive What-If Simulation Lab")
+inject_theme()
+
+st.title("What-If Simulation")
 st.markdown(
-    "Simulate counterfactual skill acquisition scenarios to observe how improving specific technical skills "
-    "affects your model career recommendations, rank shifts, and resolved skill gaps."
+    "Simulate counterfactual skill acquisition scenarios to observe how adjusting technical skill ratings "
+    "affects model career recommendations, rank shifts, and resolved skill gaps."
 )
 
 api_url = os.getenv("CAREERPATH_API_URL", "http://127.0.0.1:8000")
 client = ServiceClient(api_url=api_url)
 
 if "student_profile" not in st.session_state:
-    st.warning("⚠️ No student profile found. Please complete Profile Assessment first.")
+    st.warning("No student profile found. Please complete Profile Assessment first.")
     if st.button("Go to Profile Assessment ➔"):
         st.switch_page("pages/1_Profile_Assessment.py")
     st.stop()
 
 baseline_profile = st.session_state["student_profile"]
 
-st.subheader("⚙️ Scenario Builder: Select Skills to Improve")
+st.subheader("Scenario Builder: Skill Evidence Adjustment")
 st.caption("Adjust the sliders below to simulate acquiring or boosting specific skill evidence levels.")
 
 skills_to_modify = {}
@@ -61,12 +64,12 @@ with col2:
 
 st.markdown("---")
 
-run_sim = st.button("🚀 Run Counterfactual What-If Simulation", use_container_width=True)
+run_sim = st.button("Run Counterfactual What-If Simulation", use_container_width=True)
 
 if run_sim or "last_sim_res" in st.session_state:
     if run_sim:
         if not skills_to_modify:
-            st.info("ℹ️ No skill sliders were adjusted. Modifying 'Cyber Security' to 9.0 as a default example scenario.")
+            st.info("No skill sliders were adjusted. Modifying 'Cyber Security' to 9.0 as a default example scenario.")
             skills_to_modify["Cyber Security"] = 9.0
 
         with st.spinner("Running What-If simulation engine across model & ESCO pipeline..."):
@@ -75,7 +78,7 @@ if run_sim or "last_sim_res" in st.session_state:
     else:
         sim_res = st.session_state["last_sim_res"]
 
-    st.subheader("📊 Simulation Results: Before vs After")
+    st.subheader("Simulation Results: Baseline vs Scenario")
 
     # High level metrics
     m1, m2, m3 = st.columns(3)
@@ -90,7 +93,7 @@ if run_sim or "last_sim_res" in st.session_state:
     with m3:
         st.metric("Simulated Skills Modified", len(sim_res["skills_modified"]))
 
-    st.markdown("#### 🔄 Career Ranking Shift Table")
+    st.markdown("#### Career Ranking Shift Table")
 
     rank_changes = sim_res["rank_changes"]
     table_rows = []
@@ -99,11 +102,11 @@ if run_sim or "last_sim_res" in st.session_state:
         scen_r = f"#{rc['scenario_rank']}" if rc['scenario_rank'] is not None else "N/A"
         r_delta = rc['rank_delta']
         if r_delta > 0:
-            delta_str = f"⬆️ +{r_delta}"
+            delta_str = f"+{r_delta}"
         elif r_delta < 0:
-            delta_str = f"⬇️ {r_delta}"
+            delta_str = f"{r_delta}"
         else:
-            delta_str = "➡️ 0"
+            delta_str = "0"
 
         table_rows.append(
             {
@@ -121,12 +124,12 @@ if run_sim or "last_sim_res" in st.session_state:
     st.dataframe(df_ranks, use_container_width=True)
 
     st.markdown("---")
-    st.markdown("#### ✨ Resolved Skill Gaps & Improved Alignments")
+    st.markdown("#### Resolved Skill Gaps & Alignment Shifts")
     reduced_gaps = sim_res.get("reduced_skill_gaps", [])
     if reduced_gaps:
         for rg in reduced_gaps:
             st.success(
-                f"🎉 **{rg['career_role']}**: Increasing **{rg['skill']}** resolved skill gap for "
+                f"**{rg['career_role']}**: Increasing **{rg['skill']}** resolved skill gap for "
                 f"*{rg['esco_skill_label']}* (Similarity: `{rg['new_similarity']:.2f}`)"
             )
     else:
@@ -134,6 +137,6 @@ if run_sim or "last_sim_res" in st.session_state:
 
 st.markdown("---")
 st.info(
-    "💡 **What-If Language & Scientific Disclaimer**: 'Simulated impact' demonstrates how changing profile inputs affects model ranking outputs. "
-    "It demonstrates pipeline counterfactual logic and does NOT guarantee causal real-world outcome or employment."
+    "**Scientific Disclaimer**: Counterfactual simulation demonstrates pipeline ranking sensitivity "
+    "to modified profile inputs. It reflects model decision-support logic and does not imply causal real-world employment outcomes."
 )

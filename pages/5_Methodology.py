@@ -1,21 +1,24 @@
 """Page 5 — Scientific Methodology & Architecture.
 
-Comprehensive portfolio-grade overview of dataset characteristics, ML model evaluation,
+Comprehensive technical overview of dataset characteristics, ML model evaluation,
 ESCO taxonomy integration, vector embeddings, recommendation fusion, and scientific limitations.
 """
 
 import streamlit as st
+from careerpath.ui.theme import inject_theme
 
 st.set_page_config(page_title="Methodology — CareerPath", page_icon="📚", layout="wide")
 
-st.title("📚 Scientific Methodology & Architecture")
+inject_theme()
+
+st.title("Methodology")
 st.markdown(
     "CareerPath Intelligence combines supervised machine learning models, structured ESCO v1.2 skill taxonomies, "
     "and dense vector search into an explainable career decision-support system."
 )
 
 tab1, tab2, tab3, tab4, tab5 = st.tabs(
-    ["📊 Data & ML", "🏷️ ESCO Taxonomy", "🔍 Semantic Matching", "⚖️ Hybrid Fusion & Alpha", "⚠️ Limitations"]
+    ["Data & ML", "ESCO Taxonomy", "Semantic Matching", "Hybrid Fusion & Alpha", "Limitations"]
 )
 
 with tab1:
@@ -57,10 +60,10 @@ with tab3:
         """
         - **Embedding Model**: `sentence-transformers/all-MiniLM-L6-v2` (384-dimensional dense vectors).
         - **Vector Index**: FAISS (`IndexFlatIP` inner-product cosine similarity).
-        - **Skill Normalization**: Student profile skill attributes (e.g., "Database Fundamentals") are embedded into 384d space and matched against ESCO skill labels.
+        - **Skill Normalization**: Student profile skill attributes are embedded into 384d space and matched against ESCO skill labels.
         - **Similarity Thresholds**:
           - Matched Skill: Cosine Similarity ≥ **0.75**
-          - Partial Skill Match: Cosine Similarity **0.50 - 0.74**
+          - Partial Skill Match: Cosine Similarity **0.50 – 0.74**
           - Missing Skill: Cosine Similarity < **0.50**
         """
     )
@@ -83,7 +86,7 @@ with tab5:
     st.markdown("### Scientific Honesty & Known Limitations")
     st.markdown(
         """
-        1. **Classification vs Recommendation Metrics**: Classification Top-K measures exact label predictions. Recommendation Top-K measures whether target career roles appear within top-K ranked recommendations.
+        1. **Classification vs Ranking Metrics**: Classification Top-K measures exact label predictions. Recommendation Top-K measures whether target career roles appear within top-K ranked recommendations.
         2. **Dataset Scope**: Model predictions reflect patterns present in the empirical student dataset and should be interpreted as decision-support guidance.
         3. **Raw Dataset License Notice**: The raw dataset license status remains `UNVERIFIED`. The raw CSV file is protected under `.gitignore` and is not redistributed in open-source releases.
         4. **Decision Support, Not Hiring Automation**: The system is designed strictly for student self-assessment and academic guidance.

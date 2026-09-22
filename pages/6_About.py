@@ -4,15 +4,18 @@ Responsible ML guidelines, system metadata, open-source licensing, and decision-
 """
 
 import streamlit as st
+from careerpath.ui.theme import inject_theme
 
 st.set_page_config(page_title="About — CareerPath", page_icon="ℹ️", layout="wide")
 
-st.title("ℹ️ About CareerPath Intelligence")
+inject_theme()
+
+st.title("About")
 st.markdown(
     "CareerPath Intelligence is an open-source, portfolio-grade Machine Learning & Skill Taxonomy Decision-Support Platform."
 )
 
-st.subheader("🛡️ Responsible AI & Ethical Guidance Principles")
+st.subheader("Responsible AI & Ethical Guidance Principles")
 
 col1, col2 = st.columns(2)
 
@@ -20,10 +23,10 @@ with col1:
     st.markdown(
         """
         #### What CareerPath Intelligence IS:
-        - ✅ A decision-support tool for exploring alignment between student profiles and career paths.
-        - ✅ An explainable skill-gap inspector backed by European standard ESCO v1.2 taxonomy.
-        - ✅ A counterfactual What-If simulator to explore the impact of skill acquisition.
-        - ✅ An open-source, reproducible ML engineering project.
+        - **Decision Support**: Tool for exploring alignment between student profiles and career paths.
+        - **Skill Gap Inspector**: Explainable skill-gap analysis backed by European standard ESCO v1.2 taxonomy.
+        - **Scenario Simulation**: Counterfactual What-If simulator to explore the impact of skill acquisition.
+        - **Open Source**: Reproducible ML engineering project.
         """
     )
 
@@ -31,15 +34,15 @@ with col2:
     st.markdown(
         """
         #### What CareerPath Intelligence IS NOT:
-        - ❌ An employment guarantee or deterministic career predictor.
-        - ❌ A hiring or recruitment automation tool.
-        - ❌ An evaluation of psychological, emotional, or personal traits.
-        - ❌ A replacement for professional career counselors.
+        - **Not an Employment Guarantee**: Does not provide deterministic career predictions.
+        - **Not a Hiring Automation Tool**: Not designed for employer screening or recruitment automation.
+        - **Not a Psychological Assessment**: Does not evaluate personal or emotional traits.
+        - **Not a Counselor Replacement**: Does not replace professional human career counselors.
         """
     )
 
 st.markdown("---")
-st.subheader("⚙️ System Metadata & Open-Source Architecture")
+st.subheader("System Metadata & Open-Source Architecture")
 
 st.markdown(
     """

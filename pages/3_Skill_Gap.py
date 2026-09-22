@@ -8,20 +8,23 @@ import os
 import streamlit as st
 import pandas as pd
 from careerpath.ui.client import ServiceClient
+from careerpath.ui.theme import inject_theme
 
 st.set_page_config(page_title="Skill Gap Inspector — CareerPath", page_icon="🎯", layout="wide")
 
-st.title("🎯 Target Skill Gap Inspector")
+inject_theme()
+
+st.title("Skill Gap Inspector")
 st.markdown(
-    "Pinpoint exact skill proficiencies and evidence gaps for any specific target career role. "
-    "Required skills are extracted from ESCO v1.2 occupation taxonomy standard."
+    "Pinpoint exact skill proficiencies and evidence gaps for any target career role. "
+    "Required skills are extracted from the ESCO v1.2 occupation taxonomy standard."
 )
 
 api_url = os.getenv("CAREERPATH_API_URL", "http://127.0.0.1:8000")
 client = ServiceClient(api_url=api_url)
 
 if "student_profile" not in st.session_state:
-    st.warning("⚠️ No student profile found. Please complete Profile Assessment first.")
+    st.warning("No student profile found. Please complete Profile Assessment first.")
     if st.button("Go to Profile Assessment ➔"):
         st.switch_page("pages/1_Profile_Assessment.py")
     st.stop()
@@ -56,7 +59,7 @@ with st.spinner(f"Evaluating ESCO skill gap analysis for '{target_career}'..."):
         st.error(f"Error conducting skill gap analysis: {e}")
         st.stop()
 
-st.subheader(f"📋 Skill Alignment Report: {target_career}")
+st.subheader(f"Skill Alignment Analysis: {target_career}")
 
 c1, c2, c3 = st.columns(3)
 with c1:
@@ -76,7 +79,7 @@ missing = gap_res["missing_skills"]
 col_chart, col_details = st.columns([1, 1])
 
 with col_chart:
-    st.markdown("#### 📊 Skill Gap Composition")
+    st.markdown("#### Skill Gap Composition")
     status_df = pd.DataFrame(
         [
             {"Status": "Matched Skills", "Count": len(matched)},
@@ -87,14 +90,14 @@ with col_chart:
     st.bar_chart(status_df.set_index("Status"))
 
 with col_details:
-    st.markdown("#### 💡 Summary Status")
-    st.success(f"🟢 **{len(matched)}** Matched Skills (High evidence found in profile)")
-    st.warning(f"🟡 **{len(partial)}** Partial Matches (Moderate evidence found in profile)")
-    st.error(f"🔴 **{len(missing)}** Missing Evidence (No matching evidence found in profile)")
+    st.markdown("#### Summary Status")
+    st.markdown(f"• **{len(matched)}** Matched Skills (High evidence in profile)")
+    st.markdown(f"• **{len(partial)}** Partial Matches (Moderate evidence in profile)")
+    st.markdown(f"• **{len(missing)}** Missing Evidence (No matching evidence in profile)")
 
 st.markdown("---")
 
-tab1, tab2, tab3 = st.tabs(["✅ Matched Skills", "⚠️ Partial Matches", "❌ Missing Evidence"])
+tab1, tab2, tab3 = st.tabs(["Matched Skills", "Partial Matches", "Missing Evidence"])
 
 with tab1:
     if matched:
@@ -115,7 +118,7 @@ with tab3:
         for ms in missing:
             st.markdown(f"• **{ms['skill']}** — No matching evidence found in supplied profile attributes.")
     else:
-        st.success("🎉 Complete skill coverage! No missing skill gaps detected.")
+        st.success("Complete skill coverage! No missing skill gaps detected.")
 
 st.markdown("---")
 st.caption(

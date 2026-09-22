@@ -1,4 +1,4 @@
-"""Page 1 — Student Profile Assessment.
+"""Page 1 — Profile Assessment.
 
 Structured form to input student academic performance, technical skill evidence (0-10 scale),
 interests, and certifications.
@@ -6,13 +6,16 @@ interests, and certifications.
 
 import streamlit as st
 from careerpath.ui.client import ServiceClient
+from careerpath.ui.theme import inject_theme
 
 st.set_page_config(page_title="Profile Assessment — CareerPath", page_icon="📝", layout="wide")
 
-st.title("📝 Student Profile Assessment")
+inject_theme()
+
+st.title("Profile Assessment")
 st.markdown(
-    "Provide evidence of your technical skills, academic performance, and domain interests. "
-    "All ratings follow an empirical 0-10 evidence scale."
+    "Provide evidence of technical skills, academic performance, and domain interests. "
+    "All ratings follow a standard 0–10 evidence scale."
 )
 
 if "student_profile" not in st.session_state:
@@ -32,7 +35,7 @@ if "student_profile" not in st.session_state:
 prof = st.session_state["student_profile"]
 
 with st.form("profile_form"):
-    st.subheader("🛠️ Technical Skill Evidence (0 - 10 Scale)")
+    st.subheader("Technical Skill Evidence (0–10 Scale)")
     st.caption(
         "Scale Guidance: **0** = No demonstrated evidence | **5** = Competent project evidence | **10** = Advanced mastery"
     )
@@ -52,7 +55,7 @@ with st.form("profile_form"):
         tech_supp = st.slider("Technical Support", 0.0, 10.0, float(prof.get("Technical Support", 5.0)), 0.5)
 
     st.markdown("---")
-    st.subheader("📜 Certifications & Subjects of Interest")
+    st.subheader("Certifications & Domain Interests")
     c_col1, c_col2 = st.columns(2)
 
     with c_col1:
@@ -68,7 +71,7 @@ with st.form("profile_form"):
             help="Example: Cloud Computing, Machine Learning, Network Security",
         )
 
-    submitted = st.form_submit_button("Save Profile & Update Recommendations 💾", use_container_width=True)
+    submitted = st.form_submit_button("Save Profile & Update Recommendations", use_container_width=True)
 
 if submitted:
     updated_profile = {
@@ -84,8 +87,8 @@ if submitted:
         "interested_subjects": subjects,
     }
     st.session_state["student_profile"] = updated_profile
-    st.success("✅ Student profile successfully updated!")
+    st.success("Student profile successfully updated!")
 
 st.markdown("---")
-st.subheader("📊 Active Profile Summary")
+st.subheader("Active Profile Summary")
 st.json(st.session_state["student_profile"])
