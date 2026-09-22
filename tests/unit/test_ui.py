@@ -73,7 +73,7 @@ def test_streamlit_pages_compile():
     py_compile.compile(str(app_py), doraise=True)
 
     page_files = list(pages_dir.glob("*.py"))
-    assert len(page_files) == 6, f"Expected 6 streamlit pages, found {len(page_files)}"
+    assert len(page_files) == 4, f"Expected 4 streamlit pages in pages/, found {len(page_files)}"
 
     for page_file in page_files:
         py_compile.compile(str(page_file), doraise=True)

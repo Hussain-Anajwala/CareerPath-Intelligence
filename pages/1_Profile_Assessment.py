@@ -1,43 +1,48 @@
 """Page 1 — Profile Assessment.
 
-Structured form to input student academic performance, technical skill evidence (0-10 scale),
-interests, and certifications.
+Structured product form for entering technical skill evidence, academic performance,
+certifications, and domain interests.
 """
 
 import streamlit as st
-from careerpath.ui.client import ServiceClient
-from careerpath.ui.theme import inject_theme
+from careerpath.ui.theme import inject_theme, inject_sidebar_brand, inject_footer
 
+# Page Configuration
 st.set_page_config(page_title="Profile Assessment — CareerPath", page_icon="📝", layout="wide")
 
+# Inject Clean Design System & Sidebar Brand
 inject_theme()
+inject_sidebar_brand()
 
 st.title("Profile Assessment")
 st.markdown(
-    "Provide evidence of technical skills, academic performance, and domain interests. "
-    "All ratings follow a standard 0–10 evidence scale."
+    "Tell us about your current technical experience, academic performance and interests."
 )
 
+st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+
+# Initialize Session State Profile if absent
 if "student_profile" not in st.session_state:
     st.session_state["student_profile"] = {
-        "Database Fundamentals": 5.0,
-        "Computer Networks": 5.0,
-        "Software Engineering": 5.0,
+        "Database Fundamentals": 7.5,
+        "Computer Networks": 6.0,
+        "Software Engineering": 8.0,
         "Cyber Security": 5.0,
-        "Coding Skills": 5.0,
-        "Web Development": 5.0,
-        "Software Testing": 5.0,
-        "Technical Support": 5.0,
-        "certifications": "",
-        "interested_subjects": "",
+        "Coding Skills": 8.5,
+        "Web Development": 7.0,
+        "Software Testing": 6.5,
+        "Technical Support": 4.0,
+        "certifications": "Python Certified Associate",
+        "interested_subjects": "Software Development, Cloud Systems",
     }
 
 prof = st.session_state["student_profile"]
 
-with st.form("profile_form"):
-    st.subheader("Technical Skill Evidence (0–10 Scale)")
+with st.form("profile_assessment_form"):
+    st.subheader("Technical Skills")
     st.caption(
-        "Scale Guidance: **0** = No demonstrated evidence | **5** = Competent project evidence | **10** = Advanced mastery"
+        "Self-assessed evidence scale: **0** = no demonstrated evidence &nbsp;|&nbsp; "
+        "**5** = competent project evidence &nbsp;|&nbsp; **10** = advanced evidence"
     )
 
     col1, col2 = st.columns(2)
@@ -55,23 +60,24 @@ with st.form("profile_form"):
         tech_supp = st.slider("Technical Support", 0.0, 10.0, float(prof.get("Technical Support", 5.0)), 0.5)
 
     st.markdown("---")
-    st.subheader("Certifications & Domain Interests")
-    c_col1, c_col2 = st.columns(2)
+    st.subheader("Academic & Interest Information")
 
+    c_col1, c_col2 = st.columns(2)
     with c_col1:
         certs = st.text_input(
-            "Certifications (comma-separated)",
+            "Certifications",
             value=prof.get("certifications", ""),
-            help="Example: AWS Certified Cloud Practitioner, Python Institute PCEP",
+            placeholder="e.g., Python Certified Associate, AWS Certified",
         )
     with c_col2:
         subjects = st.text_input(
-            "Interested Subjects / Domains",
+            "Interested Subjects & Domains",
             value=prof.get("interested_subjects", ""),
-            help="Example: Cloud Computing, Machine Learning, Network Security",
+            placeholder="e.g., Software Development, Cloud Systems",
         )
 
-    submitted = st.form_submit_button("Save Profile & Update Recommendations", use_container_width=True)
+    st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+    submitted = st.form_submit_button("Save Profile & View Careers", type="primary", use_container_width=True)
 
 if submitted:
     updated_profile = {
@@ -87,8 +93,36 @@ if submitted:
         "interested_subjects": subjects,
     }
     st.session_state["student_profile"] = updated_profile
-    st.success("Student profile successfully updated!")
+    st.success("Profile saved successfully.")
+    st.switch_page("pages/2_Career_Explorer.py")
 
+# Section: Profile Review (Human-Readable Summary)
 st.markdown("---")
-st.subheader("Active Profile Summary")
-st.json(st.session_state["student_profile"])
+st.subheader("Profile Review")
+
+cur_p = st.session_state["student_profile"]
+
+rev_col1, rev_col2 = st.columns(2)
+
+with rev_col1:
+    st.markdown("##### Technical Skill Evidence")
+    skill_items = [
+        ("Coding Skills", cur_p.get("Coding Skills", 0.0)),
+        ("Software Engineering", cur_p.get("Software Engineering", 0.0)),
+        ("Database Fundamentals", cur_p.get("Database Fundamentals", 0.0)),
+        ("Web Development", cur_p.get("Web Development", 0.0)),
+        ("Computer Networks", cur_p.get("Computer Networks", 0.0)),
+        ("Cyber Security", cur_p.get("Cyber Security", 0.0)),
+        ("Software Testing", cur_p.get("Software Testing", 0.0)),
+        ("Technical Support", cur_p.get("Technical Support", 0.0)),
+    ]
+    for name, val in skill_items:
+        st.markdown(f"• **{name}:** `{val:g} / 10`")
+
+with rev_col2:
+    st.markdown("##### Background & Interests")
+    st.markdown(f"• **Certifications:** {cur_p.get('certifications') or 'None specified'}")
+    st.markdown(f"• **Interested Domains:** {cur_p.get('interested_subjects') or 'None specified'}")
+
+# Single Consolidated Footer
+inject_footer()

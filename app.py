@@ -1,13 +1,12 @@
-"""CareerPath Intelligence — Main Landing Dashboard.
+"""CareerPath Intelligence — Product Overview.
 
-Presents the career intelligence platform, active system status, guided workflow
-navigation across assessment, recommendations, skill gap inspection, and What-If simulation.
+Presents a clear, professional entry point explaining the system capabilities,
+current student profile status, top career path options, and direct navigation.
 """
 
-import os
 import streamlit as st
 from careerpath.ui.client import ServiceClient
-from careerpath.ui.theme import inject_theme
+from careerpath.ui.theme import inject_theme, inject_sidebar_brand, inject_footer
 
 # Page Configuration
 st.set_page_config(
@@ -17,27 +16,14 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Inject Clean Design System
+# Inject Clean Design System & Sidebar Brand
 inject_theme()
+inject_sidebar_brand()
 
-# Sidebar Configuration
-st.sidebar.title("System Configuration")
-api_url_input = st.sidebar.text_input(
-    "API Service URL (`CAREERPATH_API_URL`)",
-    value=os.getenv("CAREERPATH_API_URL", "http://127.0.0.1:8000"),
-    help="FastAPI server endpoint URL. If offline, the application seamlessly uses the local engine fallback.",
-)
+# Initialize Client in Background
+client = ServiceClient()
 
-client = ServiceClient(api_url=api_url_input)
-
-# Check API Server Status
-is_online, status_msg = client.check_api_health()
-if is_online:
-    st.sidebar.success(f"Status: {status_msg}")
-else:
-    st.sidebar.info(f"Status: {status_msg}")
-
-# Initialize Session State Profile if absent
+# Default Demo Profile Initialization
 if "student_profile" not in st.session_state:
     st.session_state["student_profile"] = {
         "Database Fundamentals": 7.5,
@@ -52,85 +38,127 @@ if "student_profile" not in st.session_state:
         "interested_subjects": "Software Development, Cloud Systems",
     }
 
-st.sidebar.markdown("---")
-st.sidebar.subheader("Active Profile")
-st.sidebar.caption("Predefined Demo Profile Loaded")
-active_prof = st.session_state["student_profile"]
-st.sidebar.caption(f"Coding Skills: **{active_prof.get('Coding Skills', 5.0)}/10**")
-st.sidebar.caption(f"Software Engineering: **{active_prof.get('Software Engineering', 5.0)}/10**")
-st.sidebar.caption(f"Cyber Security: **{active_prof.get('Cyber Security', 5.0)}/10**")
+prof = st.session_state["student_profile"]
 
-# Main Header Section
+# Main Product Hero Header
 st.title("CareerPath Intelligence")
 st.markdown(
-    "Explainable career decision-support platform using supervised ML ranking, "
-    "ESCO skill taxonomy, and scenario simulation."
+    "Understand which career paths align with your current skills and discover what you can improve next."
 )
 
-st.markdown("---")
+st.markdown("<div style='height: 0.8rem;'></div>", unsafe_allow_html=True)
 
-# System Metadata Bar
-col1, col2, col3, col4 = st.columns(4)
-with col1:
-    st.metric("ML Model", "CatBoost", help="Gradient boosted multi-class classifier")
-with col2:
-    st.metric("Taxonomy", "ESCO v1.2", help="European Skills, Competencies and Occupations standard")
-with col3:
-    st.metric("Vector Search", "FAISS + SBERT", help="Local 384d SBERT embeddings + inner-product index")
-with col4:
-    st.metric("System Mode", "ML Ranking + ESCO Evidence", help="Production config α = 1.0")
-
-st.markdown("---")
-
-# Guided Workflow Cards Section
-st.subheader("Guided Intelligence Workflow")
-
-c1, c2, c3, c4 = st.columns(4)
-
-with c1:
-    st.markdown("#### 1. Profile Assessment")
-    st.caption("Submit or adjust technical skill evidence (0-10 scale), academic scores, and domain interests.")
-    if st.button("Go to Profile Assessment ➔", key="btn_prof", use_container_width=True):
+# Primary Actions
+col_b1, col_b2, _ = st.columns([1, 1, 2])
+with col_b1:
+    if st.button("Review Your Profile", type="primary", use_container_width=True):
         st.switch_page("pages/1_Profile_Assessment.py")
-
-with c2:
-    st.markdown("#### 2. Career Explorer")
-    st.caption("Inspect ranked career recommendations with ML alignment scores and ESCO evidence breakdowns.")
-    if st.button("Explore Recommendations ➔", key="btn_rec", use_container_width=True):
+with col_b2:
+    if st.button("Explore Careers", use_container_width=True):
         st.switch_page("pages/2_Career_Explorer.py")
 
-with c3:
-    st.markdown("#### 3. Skill Gap Inspector")
-    st.caption("Pinpoint exact matched, partial, and missing required skills for any target career path.")
-    if st.button("Inspect Skill Gaps ➔", key="btn_gap", use_container_width=True):
-        st.switch_page("pages/3_Skill_Gap.py")
+st.markdown("---")
 
-with c4:
-    st.markdown("#### 4. What-If Simulation")
-    st.caption("Simulate counterfactual skill acquisition to observe before-vs-after ranking deltas.")
-    if st.button("Launch What-If Lab ➔", key="btn_whatif", use_container_width=True):
-        st.switch_page("pages/4_What_If_Lab.py")
+# Section 1: Your Profile Summary
+st.subheader("Your Profile Summary")
+
+# Extract Top Skills
+skill_ratings = [
+    (k, v) for k, v in prof.items() if isinstance(v, (int, float))
+]
+top_skills = sorted(skill_ratings, key=lambda x: x[1], reverse=True)[:3]
+top_skills_formatted = ", ".join([f"{k} ({v:g}/10)" for k, v in top_skills])
+
+cert_text = prof.get("certifications", "")
+interest_text = prof.get("interested_subjects", "Software Development")
+
+p_col1, p_col2, p_col3 = st.columns(3)
+
+with p_col1:
+    st.markdown(
+        """
+        <div class="product-card" style="margin-bottom: 0;">
+            <div style="font-size: 0.82rem; font-weight: 600; text-transform: uppercase; color: #64748B; letter-spacing: 0.05em;">Assessment Status</div>
+            <div style="font-size: 1.1rem; font-weight: 700; color: #0F172A; margin-top: 4px;">Profile Ready</div>
+            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px;">8 technical skill areas assessed</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with p_col2:
+    st.markdown(
+        f"""
+        <div class="product-card" style="margin-bottom: 0;">
+            <div style="font-size: 0.82rem; font-weight: 600; text-transform: uppercase; color: #64748B; letter-spacing: 0.05em;">Demonstrated Strengths</div>
+            <div style="font-size: 1.0rem; font-weight: 700; color: #0F172A; margin-top: 4px; line-height: 1.3;">{top_skills_formatted}</div>
+            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px;">Highest rated competencies</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+with p_col3:
+    st.markdown(
+        f"""
+        <div class="product-card" style="margin-bottom: 0;">
+            <div style="font-size: 0.82rem; font-weight: 600; text-transform: uppercase; color: #64748B; letter-spacing: 0.05em;">Stated Interests</div>
+            <div style="font-size: 1.0rem; font-weight: 700; color: #0F172A; margin-top: 4px;">{interest_text or 'Not specified'}</div>
+            <div style="font-size: 0.85rem; color: #475569; margin-top: 2px;">Target domain preferences</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 st.markdown("---")
 
-# Quick Baseline Overview Preview
-st.subheader("Quick Recommendation Preview")
-with st.spinner("Generating career intelligence preview..."):
-    recs = client.get_recommendations(st.session_state["student_profile"], top_k=3, alpha=1.0)
+# Section 2: Top Career Alignment Options
+st.subheader("Your Top Career Options")
+
+try:
+    recs = client.get_recommendations(prof, top_k=3, alpha=1.0)
+except Exception:
+    recs = []
 
 if recs:
-    p_cols = st.columns(len(recs))
     for idx, r in enumerate(recs):
-        with p_cols[idx]:
-            st.markdown(f"**#{idx+1} {r['career_role']}**")
-            st.caption(f"ESCO Title: {r['esco_occupation_title']}")
-            st.metric("Alignment Score", f"{r['final_score']:.3f}")
-            st.markdown(f"• **ML Signal:** `{r['normalized_ml_score']:.3f}`")
-            st.markdown(f"• **ESCO Alignment:** `{r['esco_score']:.3f}`")
-            st.caption(f"Matched Skills: {len(r['matched_skills'])} | Missing Gaps: {len(r['missing_skills'])}")
+        rank = idx + 1
+        role = r["career_role"]
+        matched = r.get("matched_skills", [])
+        partial = r.get("partial_matches", [])
+        missing = r.get("missing_skills", [])
+        total_req = len(matched) + len(partial) + len(missing)
 
-st.markdown("---")
-st.info(
-    "**Decision-Support Notice**: CareerPath Intelligence provides evidence-based career alignment analysis. "
-    "It does not predict guaranteed employment or substitute for professional academic counseling."
-)
+        alignment_tier = (
+            "Strong current alignment"
+            if rank == 1
+            else ("Good current alignment" if rank == 2 else "Moderate current alignment")
+        )
+
+        match_summary = (
+            f"{len(matched)} of {total_req} required skills matched"
+            if total_req > 0
+            else f"{len(matched)} skills matched"
+        )
+
+        st.markdown(
+            f"""
+            <div class="product-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                    <div>
+                        <span style="font-size: 1.15rem; font-weight: 700; color: #0F172A;">#{rank} &nbsp; {role}</span>
+                        <span style="margin-left: 10px; font-size: 0.82rem; font-weight: 600; color: #1E40AF; background-color: #EFF6FF; border: 1px solid #DBEAFE; padding: 3px 8px; border-radius: 4px;">{alignment_tier}</span>
+                    </div>
+                    <div style="font-size: 0.9rem; font-weight: 600; color: #334155;">
+                        {match_summary}
+                    </div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+else:
+    st.info("Complete your profile assessment to explore top career recommendations.")
+
+# Single Consolidated Footer
+inject_footer()

@@ -1,119 +1,235 @@
 """Page 2 — Career Explorer.
 
-Displays top career recommendations, decomposable score breakdowns, ESCO occupation mappings,
-skill coverage ratios, matched skills, partial matches, and missing skill evidence.
+The primary product interface for exploring ranked career path recommendations,
+understanding career alignment rationale, inspecting integrated skill coverage/gaps,
+and discovering recommended skill development areas.
 """
 
-import os
 import streamlit as st
 from careerpath.ui.client import ServiceClient
-from careerpath.ui.theme import inject_theme
+from careerpath.ui.theme import inject_theme, inject_sidebar_brand, inject_footer
 
+# Page Configuration
 st.set_page_config(page_title="Career Explorer — CareerPath", page_icon="🔍", layout="wide")
 
+# Inject Clean Design System & Sidebar Brand
 inject_theme()
+inject_sidebar_brand()
+
+client = ServiceClient()
 
 st.title("Career Explorer")
-st.markdown(
-    "Explore ranked career path recommendations tailored to your profile evidence. "
-    "Every recommendation decomposes into machine learning model signals and ESCO taxonomy skill alignment."
-)
+st.markdown("Career paths for your current profile.")
 
-api_url = os.getenv("CAREERPATH_API_URL", "http://127.0.0.1:8000")
-client = ServiceClient(api_url=api_url)
+st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
 
+# Guard against missing profile
 if "student_profile" not in st.session_state:
-    st.warning("No student profile found. Please complete Profile Assessment first.")
-    if st.button("Go to Profile Assessment ➔"):
+    st.warning("Your career profile is not ready yet. Please complete your profile assessment first.")
+    if st.button("Complete Profile Assessment", type="primary"):
         st.switch_page("pages/1_Profile_Assessment.py")
     st.stop()
 
 profile = st.session_state["student_profile"]
 
-# Controls
-col_ctrl1, col_ctrl2 = st.columns([1, 2])
-with col_ctrl1:
-    top_k = st.slider("Top Recommendations (K)", min_value=1, max_value=10, value=5)
-with col_ctrl2:
-    alpha = st.slider(
-        "Exploratory Fusion Weight α",
-        min_value=0.0,
-        max_value=1.0,
-        value=1.0,
-        step=0.1,
-        help="Production configuration: α = 1.0 (Supervised ML ranking + ESCO explainability evidence). Adjust α to explore alternative hybrid scoring combinations (α = 0.0 is ESCO-only skill alignment).",
-    )
+# Advanced/Exploratory Settings (Progressive Disclosure)
+with st.sidebar:
+    st.markdown("---")
+    st.markdown("### Exploration Settings")
+    top_k_select = st.slider("Recommendations to display", 3, 10, 5)
+    
+    # Store alpha in session state (default 1.0)
+    if "exploratory_alpha" not in st.session_state:
+        st.session_state["exploratory_alpha"] = 1.0
 
-st.markdown("---")
+alpha = st.session_state.get("exploratory_alpha", 1.0)
 
-with st.spinner("Calculating career recommendations..."):
-    recs = client.get_recommendations(profile, top_k=top_k, alpha=alpha)
+try:
+    recs = client.get_recommendations(profile, top_k=top_k_select, alpha=alpha)
+except Exception as e:
+    st.error("Unable to load recommendations. Please verify backend service availability.")
+    recs = []
 
 if not recs:
-    st.error("Failed to generate career recommendations. Please verify system dependencies.")
+    st.info("No recommendations generated. Complete your profile to explore career paths.")
     st.stop()
 
-st.subheader(f"Top {len(recs)} Recommended Career Paths")
+# -----------------------------------------------------------------------------
+# Section 1: Ranked Recommendation List
+# -----------------------------------------------------------------------------
+st.subheader("Top Recommended Career Paths")
 
-for idx, rec in enumerate(recs):
-    rank = idx + 1
-    role_title = rec["career_role"]
-    esco_title = rec["esco_occupation_title"]
-    final_score = rec["final_score"]
-    ml_score = rec["normalized_ml_score"]
-    esco_score = rec["esco_score"]
-    raw_ml = rec["raw_ml_probability"]
+# Create list of roles for user selection
+rec_roles = [r["career_role"] for r in recs]
 
-    matched = rec["matched_skills"]
-    partial = rec["partial_matches"]
-    missing = rec["missing_skills"]
-    total_req = len(matched) + len(partial) + len(missing)
+# Check if target_career pre-selected from session state or default to rank 1
+default_selected_index = 0
+if "target_career" in st.session_state and st.session_state["target_career"] in rec_roles:
+    default_selected_index = rec_roles.index(st.session_state["target_career"])
 
-    with st.expander(f"#{rank} — {role_title} (Score: {final_score:.3f})", expanded=(rank == 1)):
-        m_col1, m_col2, m_col3, m_col4 = st.columns(4)
-        with m_col1:
-            st.metric("Composite Score", f"{final_score:.3f}")
-        with m_col2:
-            st.metric("ML Model Score", f"{ml_score:.3f}", help=f"Raw CatBoost probability: {raw_ml:.4f}")
-        with m_col3:
-            st.metric("ESCO Skill Score", f"{esco_score:.3f}")
-        with m_col4:
-            coverage_pct = (len(matched) / total_req * 100) if total_req > 0 else 0
-            st.metric("Skill Coverage", f"{len(matched)} / {total_req}", f"{coverage_pct:.0f}%")
+selected_role = st.radio(
+    "Select a career path to explore detail & skill alignment:",
+    options=rec_roles,
+    index=default_selected_index,
+    horizontal=True,
+    label_visibility="collapsed",
+)
 
-        st.caption(f"ESCO Occupation Mapping: **{esco_title}** (`{rec['esco_occupation_uri']}`)")
+# Find selected recommendation record
+selected_rec = next((r for r in recs if r["career_role"] == selected_role), recs[0])
 
-        st.markdown("#### Decomposable Evidence Breakdown")
-        ev_col1, ev_col2 = st.columns(2)
-
-        with ev_col1:
-            st.markdown("##### Matched Skill Evidence")
-            if matched:
-                for m in matched:
-                    st.markdown(f"• **{m['skill']}** (Similarity: `{m['similarity']:.2f}`) — *{m['evidence']}*")
-            else:
-                st.caption("No strong skill matches found.")
-
-            if partial:
-                st.markdown("##### Partial Skill Evidence")
-                for p in partial:
-                    st.markdown(f"• **{p['skill']}** (Similarity: `{p['similarity']:.2f}`) — *{p['evidence']}*")
-
-        with ev_col2:
-            st.markdown("##### Missing Skill Evidence")
-            if missing:
-                for ms in missing:
-                    st.markdown(f"• **{ms['skill']}** (Similarity: `{ms['similarity']:.2f}`)")
-            else:
-                st.caption("No missing skill gaps detected!")
-
-        st.markdown("---")
-        if st.button(f"Inspect Skill Gap for {role_title} ➔", key=f"btn_gap_{idx}"):
-            st.session_state["target_career"] = role_title
-            st.switch_page("pages/3_Skill_Gap.py")
+# Summary Cards for Recommendations List
+card_cols = st.columns(min(len(recs), 5))
+for idx, r in enumerate(recs[:5]):
+    role_name = r["career_role"]
+    matched_count = len(r.get("matched_skills", []))
+    total_req = matched_count + len(r.get("partial_matches", [])) + len(r.get("missing_skills", []))
+    
+    is_active = (role_name == selected_rec["career_role"])
+    card_border = "#2563EB" if is_active else "#E2E8F0"
+    card_bg = "#EFF6FF" if is_active else "#FFFFFF"
+    
+    with card_cols[idx]:
+        st.markdown(
+            f"""
+            <div style="background-color: {card_bg}; border: 1.5px solid {card_border}; border-radius: 8px; padding: 0.9rem; height: 100%;">
+                <div style="font-size: 0.8rem; font-weight: 700; color: #2563EB;">#{idx + 1} RANKED</div>
+                <div style="font-size: 0.95rem; font-weight: 700; color: #0F172A; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{role_name}</div>
+                <div style="font-size: 0.82rem; color: #475569; margin-top: 4px;">{matched_count}/{total_req} skills matched</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 st.markdown("---")
-st.info(
-    "**Score Interpretation**: Scores reflect relative model alignment and ESCO skill similarity on a [0, 1] scale. "
-    "They represent decision-support evidence rather than deterministic probabilities of employment."
-)
+
+# -----------------------------------------------------------------------------
+# Section 2: Selected Career Detailed Breakdown
+# -----------------------------------------------------------------------------
+role_title = selected_rec["career_role"]
+esco_title = selected_rec["esco_occupation_title"]
+matched = selected_rec.get("matched_skills", [])
+partial = selected_rec.get("partial_matches", [])
+missing = selected_rec.get("missing_skills", [])
+total_skills = len(matched) + len(partial) + len(missing)
+
+st.subheader(f"Career Alignment: {role_title}")
+st.markdown(f"Your profile demonstrates strong alignment with the standard **{esco_title}** career path.")
+
+st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+
+# 2.1 Why This Career
+st.markdown("#### Why This Career Matches")
+if matched:
+    top_matched_names = ", ".join([m["skill"] for m in matched[:3]])
+    st.markdown(
+        f"Your profile demonstrates strong proficiency in **{top_matched_names}**, "
+        f"which forms the essential foundation for a {role_title}."
+    )
+else:
+    st.markdown(f"Your profile has foundational technical overlap with the core requirements for {role_title}.")
+
+st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+
+# 2.2 Skill Alignment (Integrated Skill Gap)
+st.markdown("#### Skill Alignment & Coverage")
+
+if total_skills > 0:
+    st.markdown(f"**{len(matched)} of {total_skills} required skills matched**")
+else:
+    st.markdown("Skill alignment evaluated against ESCO taxonomy standards.")
+
+align_col1, align_col2, align_col3 = st.columns(3)
+
+with align_col1:
+    st.markdown("##### Matched Skills")
+    if matched:
+        for m in matched:
+            st.markdown(
+                f"""<div class="skill-tag skill-matched">✓ {m['skill']}</div>""",
+                unsafe_allow_html=True,
+            )
+    else:
+        st.caption("No full skill matches identified yet.")
+
+with align_col2:
+    st.markdown("##### Partial Matches")
+    if partial:
+        for p in partial:
+            st.markdown(
+                f"""<div class="skill-tag skill-partial">~ {p['skill']}</div>""",
+                unsafe_allow_html=True,
+            )
+    else:
+        st.caption("No partial matches.")
+
+with align_col3:
+    st.markdown("##### Missing Skills")
+    if missing:
+        for ms in missing:
+            st.markdown(
+                f"""<div class="skill-tag skill-missing">+ {ms['skill']}</div>""",
+                unsafe_allow_html=True,
+            )
+    else:
+        st.caption("Complete skill coverage!")
+
+st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
+
+# 2.3 Next Areas to Develop
+st.markdown("#### Next Areas to Develop")
+if missing:
+    gaps_list = ", ".join([ms["skill"] for ms in missing[:3]])
+    st.markdown(f"To strengthen your alignment for **{role_title}**, focus next on developing: **{gaps_list}**.")
+elif partial:
+    part_list = ", ".join([p["skill"] for p in partial[:3]])
+    st.markdown(f"To solidify your alignment for **{role_title}**, deepen your practical evidence in: **{part_list}**.")
+else:
+    st.success("Complete coverage! Your profile addresses all required skills for this career path.")
+
+# Quick action to What-If simulation
+st.markdown("<div style='height: 0.4rem;'></div>", unsafe_allow_html=True)
+if st.button(f"Simulate Improving Skills for {role_title} in What-If Lab ➔"):
+    st.session_state["target_career"] = role_title
+    st.switch_page("pages/3_What_If.py")
+
+st.markdown("---")
+
+# -----------------------------------------------------------------------------
+# Section 3: Progressive Disclosure — Recommendation Details
+# -----------------------------------------------------------------------------
+with st.expander("How this recommendation is calculated", expanded=False):
+    st.markdown("#### Technical Model & Taxonomy Details")
+    st.caption(
+        "Internal evidence breakdown combining supervised ML classification ranking with "
+        "ESCO v1.2 taxonomy vector similarity."
+    )
+
+    d_col1, d_col2, d_col3, d_col4 = st.columns(4)
+    with d_col1:
+        st.metric("Composite Score", f"{selected_rec['final_score']:.3f}")
+    with d_col2:
+        st.metric("ML Model Score", f"{selected_rec['normalized_ml_score']:.3f}")
+    with d_col3:
+        st.metric("ESCO Skill Score", f"{selected_rec['esco_score']:.3f}")
+    with d_col4:
+        st.metric("Raw ML Probability", f"{selected_rec['raw_ml_probability']:.4f}")
+
+    st.markdown(f"• **ESCO Occupation URI:** `{selected_rec['esco_occupation_uri']}`")
+
+    st.markdown("---")
+    st.markdown("##### Exploratory Fusion Control")
+    new_alpha = st.slider(
+        "Exploratory fusion weight (α)",
+        min_value=0.0,
+        max_value=1.0,
+        value=float(st.session_state.get("exploratory_alpha", 1.0)),
+        step=0.1,
+        help="Production recommendations use the validated ML ranking configuration (α = 1.0). This control is provided for exploratory comparison.",
+    )
+    if new_alpha != st.session_state.get("exploratory_alpha", 1.0):
+        st.session_state["exploratory_alpha"] = new_alpha
+        st.rerun()
+
+# Single Consolidated Footer
+inject_footer()
