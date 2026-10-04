@@ -50,9 +50,12 @@ data/raw/*
 !data/raw/.gitkeep
 data/interim/*
 !data/interim/.gitkeep
-data/processed/*
+data/processed/*.csv
 !data/processed/.gitkeep
-models/*
+!data/processed/esco/
+!data/processed/esco/**
+!models/
+!models/**
 !models/.gitkeep
 
 # Database

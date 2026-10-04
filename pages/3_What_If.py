@@ -1,7 +1,8 @@
 """Page 3 — What-If Simulation.
 
 Interactive counterfactual scenario builder allowing users to simulate skill improvements,
-observe career recommendation rank shifts, and inspect resolved skill gaps.
+observe career recommendation rank shifts, and inspect resolved skill gaps adhering to
+Stitch UI visual layout.
 """
 
 import streamlit as st
@@ -11,15 +12,15 @@ from careerpath.ui.theme import inject_theme, inject_sidebar_brand, inject_foote
 # Page Configuration
 st.set_page_config(page_title="What-If Simulation — CareerPath", page_icon="🧪", layout="wide")
 
-# Inject Clean Design System & Sidebar Brand
+# Inject Design System & Sidebar Brand
 inject_theme()
 inject_sidebar_brand()
 
 client = ServiceClient()
 
-st.title("What-If")
+st.title("What-If Lab")
 st.markdown(
-    "See how improving specific skills could change your current career recommendations."
+    "Simulate hypothetical skill level upgrades and observe how changing your evidence profile impacts your career recommendation rankings."
 )
 
 st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
@@ -35,7 +36,7 @@ baseline_profile = st.session_state["student_profile"]
 
 # Scenario Builder Form
 st.subheader("Scenario Builder")
-st.caption("Adjust skill ratings below to simulate acquiring or strengthening specific technical evidence.")
+st.caption("Adjust skill ratings below to simulate acquiring or strengthening technical evidence.")
 
 skill_keys = [
     "Database Fundamentals",
@@ -81,19 +82,18 @@ with col2:
 
 st.markdown("<div style='height: 0.5rem;'></div>", unsafe_allow_html=True)
 
-run_sim = st.button("Run Simulation", type="primary", use_container_width=True)
+run_sim = st.button("Run Simulation ➔", type="primary", use_container_width=True)
 
-if run_sim or "last_sim_res" in st.session_state:
-    if run_sim:
-        if not skills_to_modify:
-            st.info("No skill sliders were modified. Simulating an increase in 'Cyber Security' to 9.0 as a sample scenario.")
-            skills_to_modify["Cyber Security"] = 9.0
-
+if run_sim:
+    if not skills_to_modify:
+        st.info("Please adjust one or more skill sliders above to create a custom scenario before running the simulation.")
+    else:
         with st.spinner("Calculating simulated career recommendations..."):
             sim_res = client.simulate_what_if(baseline_profile, skills_to_modify, top_k=5)
             st.session_state["last_sim_res"] = sim_res
-    else:
-        sim_res = st.session_state["last_sim_res"]
+
+if "last_sim_res" in st.session_state:
+    sim_res = st.session_state["last_sim_res"]
 
     st.markdown("---")
     st.subheader("Simulation Results")
@@ -103,9 +103,9 @@ if run_sim or "last_sim_res" in st.session_state:
     with m1:
         st.markdown(
             f"""
-            <div class="product-card" style="margin-bottom: 0;">
-                <div style="font-size: 0.82rem; font-weight: 600; text-transform: uppercase; color: #64748B;">Current Top Path</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #0F172A; margin-top: 4px;">{sim_res['baseline_top_recommendation']}</div>
+            <div class="stitch-card" style="margin-bottom: 0;">
+                <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #64748B;">Current Top Path</div>
+                <div style="font-size: 1.15rem; font-weight: 700; color: #131B2E; margin-top: 4px;">{sim_res['baseline_top_recommendation']}</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -115,9 +115,9 @@ if run_sim or "last_sim_res" in st.session_state:
         badge_text = "Rank Shifted" if is_changed else "Same Top Path"
         st.markdown(
             f"""
-            <div class="product-card" style="margin-bottom: 0;">
-                <div style="font-size: 0.82rem; font-weight: 600; text-transform: uppercase; color: #64748B;">Simulated Top Path ({badge_text})</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #1E40AF; margin-top: 4px;">{sim_res['scenario_top_recommendation']}</div>
+            <div class="stitch-card" style="margin-bottom: 0;">
+                <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #64748B;">Simulated Top Path ({badge_text})</div>
+                <div style="font-size: 1.15rem; font-weight: 700; color: #1E40AF; margin-top: 4px;">{sim_res['scenario_top_recommendation']}</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -125,9 +125,9 @@ if run_sim or "last_sim_res" in st.session_state:
     with m3:
         st.markdown(
             f"""
-            <div class="product-card" style="margin-bottom: 0;">
-                <div style="font-size: 0.82rem; font-weight: 600; text-transform: uppercase; color: #64748B;">Skills Simulated</div>
-                <div style="font-size: 1.1rem; font-weight: 700; color: #0F172A; margin-top: 4px;">{len(sim_res['skills_modified'])} area(s) updated</div>
+            <div class="stitch-card" style="margin-bottom: 0;">
+                <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #64748B;">Skills Simulated</div>
+                <div style="font-size: 1.15rem; font-weight: 700; color: #131B2E; margin-top: 4px;">{len(sim_res['skills_modified'])} area(s) updated</div>
             </div>
             """,
             unsafe_allow_html=True,
@@ -138,7 +138,7 @@ if run_sim or "last_sim_res" in st.session_state:
 
     rank_changes = sim_res["rank_changes"]
     
-    # Styled Product Data Table HTML
+    # Styled Table
     table_html = """
     <div class="product-table-container">
     <table class="product-table">
@@ -173,8 +173,8 @@ if run_sim or "last_sim_res" in st.session_state:
             <td>{base_r}</td>
             <td>{scen_r}</td>
             <td>{shift_badge}</td>
-            <td>{rc['baseline_score']:.3f}</td>
-            <td>{rc['scenario_score']:.3f}</td>
+            <td><code>{rc['baseline_score']:.3f}</code></td>
+            <td><code>{rc['scenario_score']:.3f}</code></td>
             <td><code>{rc['score_delta']:+.3f}</code></td>
         </tr>
         """
@@ -198,5 +198,5 @@ if run_sim or "last_sim_res" in st.session_state:
     else:
         st.markdown("Model scores were updated for all career paths based on the simulated profile input.")
 
-# Single Consolidated Footer
+# Footer
 inject_footer()

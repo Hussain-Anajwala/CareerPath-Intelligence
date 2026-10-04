@@ -1,7 +1,8 @@
 """Page 4 — About & Methodology.
 
 Comprehensive secondary reference page detailing system purpose, workflow architecture,
-empirical validation metrics, responsible use principles, and technical implementation.
+audited empirical validation metrics, responsible use principles, and technical implementation
+adhering to Stitch UI visual layout.
 """
 
 import streamlit as st
@@ -10,14 +11,14 @@ from careerpath.ui.theme import inject_theme, inject_sidebar_brand, inject_foote
 # Page Configuration
 st.set_page_config(page_title="About & Methodology — CareerPath", page_icon="ℹ️", layout="wide")
 
-# Inject Clean Design System & Sidebar Brand
+# Inject Design System & Sidebar Brand
 inject_theme()
 inject_sidebar_brand()
 
 st.title("About & Methodology")
 st.markdown(
     "CareerPath Intelligence is an explainable career decision-support platform that helps "
-    "students explore career alignment, skill gaps and possible skill-improvement scenarios."
+    "students explore career alignment, skill gaps, and possible skill-improvement scenarios."
 )
 
 st.markdown("<div style='height: 0.8rem;'></div>", unsafe_allow_html=True)
@@ -40,11 +41,11 @@ st.markdown("---")
 # -----------------------------------------------------------------------------
 # Section 2: How It Works
 # -----------------------------------------------------------------------------
-st.subheader("How It Works")
+st.subheader("System Pipeline Workflow")
 
 st.markdown(
     """
-    <div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 1.2rem; text-align: center; font-weight: 600; color: #334155; font-size: 0.92rem; line-height: 2.0;">
+    <div style="background-color: #FAF8FF; border: 1px solid #E2E7FF; border-radius: 10px; padding: 1.25rem; text-align: center; font-weight: 600; color: #131B2E; font-size: 0.92rem; line-height: 2.2;">
         Student Profile &nbsp; ➔ &nbsp; 
         Feature Preprocessing &nbsp; ➔ &nbsp; 
         CatBoost Ranking &nbsp; ➔ &nbsp; 
@@ -60,11 +61,11 @@ st.markdown(
 st.markdown("<div style='height: 0.8rem;'></div>", unsafe_allow_html=True)
 
 # -----------------------------------------------------------------------------
-# Section 3: Empirical Validation & Model Performance (Stat-Card Grid)
+# Section 3: Empirical Validation & Model Performance
 # -----------------------------------------------------------------------------
 st.subheader("Model Validation")
 
-st.markdown("##### Dataset & Evaluation Setup")
+st.markdown("##### Dataset & Holdout Evaluation Setup")
 st.markdown(
     "• **Dataset:** N = 6,901 student profiles &nbsp;|&nbsp; "
     "• **Training Split:** 5,520 samples (80%) &nbsp;|&nbsp; "
@@ -72,13 +73,15 @@ st.markdown(
     "• **Selected Model:** **CatBoost Classifier**"
 )
 
+st.caption("These metrics describe model performance on historical holdout data. They do not represent employment, hiring, placement, or career-success probabilities.")
+
 st.markdown("<div style='height: 0.6rem;'></div>", unsafe_allow_html=True)
 
 st.markdown("##### Holdout Evaluation Metrics (N = 1,381)")
 m_col1, m_col2, m_col3 = st.columns(3)
 with m_col1:
-    st.metric("Top-1 Accuracy", "7.60%", help="Exact top recommendation accuracy")
-    st.metric("Macro F1 Score", "0.0744", help="Unweighted average macro F1 across career classes")
+    st.metric("Top-1 Accuracy", "7.60%", help="Exact top recommendation matching true label")
+    st.metric("Macro F1 Score", "0.0744", help="Unweighted macro average F1 across career classes")
 with m_col2:
     st.metric("Top-3 Accuracy", "25.42%", help="Target career present within top 3 recommendations")
     st.metric("Log Loss", "2.5151", help="Multiclass cross-entropy loss")
@@ -91,7 +94,7 @@ st.markdown("---")
 # -----------------------------------------------------------------------------
 # Section 4: Responsible Use Principles
 # -----------------------------------------------------------------------------
-st.subheader("Responsible Use & Limitations")
+st.subheader("Responsible Use & Boundaries")
 
 resp_col1, resp_col2 = st.columns(2)
 
@@ -127,5 +130,5 @@ with t_col2:
     st.markdown("• **Vector Search:** FAISS (`IndexFlatIP`) with Sentence Transformers (`all-MiniLM-L6-v2`)")
     st.markdown("• **Data Persistence:** SQLite database via SQLAlchemy ORM")
 
-# Single Consolidated Footer
+# Footer
 inject_footer()

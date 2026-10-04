@@ -1,0 +1,307 @@
+{
+  "artifact_name": "advanced_catboost",
+  "version": "v1.0",
+  "file_name": "advanced_catboost.joblib",
+  "sha256_checksum": "2988b4923111ba4e311aa37473ee1d927d5ea8b1c26a989cca081175c23aed99",
+  "user_metadata": {
+    "model_name": "catboost",
+    "dataset_sha256": "cd9b2d1ce8d1d582f1e472a7dcb2724f687e22ac5932d5760eac95c53d281d62",
+    "hyperparameters": {
+      "iterations": 100,
+      "depth": 6,
+      "learning_rate": 0.1,
+      "loss_function": "MultiClass",
+      "random_seed": 42,
+      "verbose": 0,
+      "thread_count": -1
+    },
+    "cv_metrics": {
+      "cv_accuracy_mean": 0.0814,
+      "cv_accuracy_std": 0.0089,
+      "cv_macro_f1_mean": 0.0793,
+      "cv_macro_f1_std": 0.0096,
+      "cv_weighted_f1_mean": 0.0796,
+      "cv_top_1_mean": 0.0814,
+      "cv_top_3_mean": 0.2422,
+      "cv_top_5_mean": 0.4078
+    },
+    "test_metrics": {
+      "accuracy": 0.076,
+      "macro_precision": 0.0758,
+      "macro_recall": 0.0754,
+      "macro_f1": 0.0744,
+      "weighted_f1": 0.0747,
+      "confusion_matrix": [
+        [
+          5,
+          10,
+          8,
+          7,
+          17,
+          10,
+          8,
+          6,
+          9,
+          10,
+          11,
+          9
+        ],
+        [
+          2,
+          7,
+          12,
+          6,
+          20,
+          13,
+          11,
+          10,
+          4,
+          14,
+          9,
+          6
+        ],
+        [
+          7,
+          10,
+          12,
+          4,
+          16,
+          9,
+          13,
+          12,
+          9,
+          9,
+          8,
+          7
+        ],
+        [
+          8,
+          9,
+          11,
+          8,
+          9,
+          8,
+          8,
+          5,
+          5,
+          12,
+          17,
+          8
+        ],
+        [
+          6,
+          12,
+          12,
+          3,
+          13,
+          10,
+          12,
+          18,
+          5,
+          11,
+          14,
+          10
+        ],
+        [
+          8,
+          9,
+          8,
+          4,
+          18,
+          11,
+          11,
+          13,
+          5,
+          15,
+          9,
+          7
+        ],
+        [
+          2,
+          9,
+          5,
+          7,
+          22,
+          13,
+          9,
+          9,
+          8,
+          15,
+          13,
+          6
+        ],
+        [
+          4,
+          6,
+          11,
+          14,
+          21,
+          8,
+          10,
+          9,
+          2,
+          11,
+          11,
+          7
+        ],
+        [
+          9,
+          4,
+          13,
+          3,
+          19,
+          11,
+          13,
+          8,
+          3,
+          8,
+          11,
+          10
+        ],
+        [
+          7,
+          4,
+          13,
+          5,
+          18,
+          12,
+          12,
+          7,
+          8,
+          7,
+          11,
+          9
+        ],
+        [
+          9,
+          14,
+          7,
+          5,
+          13,
+          9,
+          15,
+          13,
+          4,
+          10,
+          15,
+          4
+        ],
+        [
+          9,
+          11,
+          12,
+          5,
+          12,
+          13,
+          11,
+          12,
+          8,
+          6,
+          9,
+          6
+        ]
+      ],
+      "top_1_accuracy": 0.076,
+      "top_3_accuracy": 0.2542,
+      "top_5_accuracy": 0.4301,
+      "per_class_report": {
+        "Applications Developer": {
+          "precision": 0.06578947368421052,
+          "recall": 0.045454545454545456,
+          "f1-score": 0.053763440860215055,
+          "support": 110.0
+        },
+        "CRM Technical Developer": {
+          "precision": 0.06666666666666667,
+          "recall": 0.06140350877192982,
+          "f1-score": 0.0639269406392694,
+          "support": 114.0
+        },
+        "Database Developer": {
+          "precision": 0.0967741935483871,
+          "recall": 0.10344827586206896,
+          "f1-score": 0.1,
+          "support": 116.0
+        },
+        "Mobile Applications Developer": {
+          "precision": 0.11267605633802817,
+          "recall": 0.07407407407407407,
+          "f1-score": 0.0893854748603352,
+          "support": 108.0
+        },
+        "Network Security Engineer": {
+          "precision": 0.06565656565656566,
+          "recall": 0.10317460317460317,
+          "f1-score": 0.08024691358024691,
+          "support": 126.0
+        },
+        "Software Developer": {
+          "precision": 0.08661417322834646,
+          "recall": 0.09322033898305085,
+          "f1-score": 0.08979591836734693,
+          "support": 118.0
+        },
+        "Software Engineer": {
+          "precision": 0.06766917293233082,
+          "recall": 0.07627118644067797,
+          "f1-score": 0.07171314741035857,
+          "support": 118.0
+        },
+        "Software Quality Assurance (QA) / Testing": {
+          "precision": 0.07377049180327869,
+          "recall": 0.07894736842105263,
+          "f1-score": 0.07627118644067797,
+          "support": 114.0
+        },
+        "Systems Security Administrator": {
+          "precision": 0.04285714285714286,
+          "recall": 0.026785714285714284,
+          "f1-score": 0.03296703296703297,
+          "support": 112.0
+        },
+        "Technical Support": {
+          "precision": 0.0546875,
+          "recall": 0.061946902654867256,
+          "f1-score": 0.058091286307053944,
+          "support": 113.0
+        },
+        "UX Designer": {
+          "precision": 0.10869565217391304,
+          "recall": 0.1271186440677966,
+          "f1-score": 0.1171875,
+          "support": 118.0
+        },
+        "Web Developer": {
+          "precision": 0.06741573033707865,
+          "recall": 0.05263157894736842,
+          "f1-score": 0.059113300492610835,
+          "support": 114.0
+        },
+        "accuracy": 0.07603186097031137,
+        "macro avg": {
+          "precision": 0.0757727349354957,
+          "recall": 0.07537306176147912,
+          "f1-score": 0.07437184516042898,
+          "support": 1381.0
+        },
+        "weighted avg": {
+          "precision": 0.07575005687298535,
+          "recall": 0.07603186097031137,
+          "f1-score": 0.07468721320832487,
+          "support": 1381.0
+        }
+      }
+    },
+    "calibration_metrics": {
+      "log_loss": 2.5151,
+      "brier_score": 0.9221
+    },
+    "latency_metrics": {
+      "single_sample_latency_ms": 2.1917,
+      "batch_total_latency_ms": 3.8935,
+      "batch_per_sample_latency_ms": 0.0028
+    },
+    "num_train_samples": 5520,
+    "num_features": 98
+  }
+}

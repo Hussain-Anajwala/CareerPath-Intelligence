@@ -1,0 +1,310 @@
+{
+  "artifact_name": "advanced_lightgbm",
+  "version": "v1.0",
+  "file_name": "advanced_lightgbm.joblib",
+  "sha256_checksum": "a1b45a1ef9c352d1edc15920ab7b28cc0a89a0abc3d123ba5d4d0972f530e54e",
+  "user_metadata": {
+    "model_name": "lightgbm",
+    "dataset_sha256": "cd9b2d1ce8d1d582f1e472a7dcb2724f687e22ac5932d5760eac95c53d281d62",
+    "hyperparameters": {
+      "n_estimators": 100,
+      "learning_rate": 0.1,
+      "num_leaves": 31,
+      "max_depth": -1,
+      "min_child_samples": 20,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "random_state": 42,
+      "n_jobs": -1,
+      "verbose": -1
+    },
+    "cv_metrics": {
+      "cv_accuracy_mean": 0.077,
+      "cv_accuracy_std": 0.0063,
+      "cv_macro_f1_mean": 0.0766,
+      "cv_macro_f1_std": 0.0063,
+      "cv_weighted_f1_mean": 0.0768,
+      "cv_top_1_mean": 0.077,
+      "cv_top_3_mean": 0.2469,
+      "cv_top_5_mean": 0.412
+    },
+    "test_metrics": {
+      "accuracy": 0.0775,
+      "macro_precision": 0.0767,
+      "macro_recall": 0.077,
+      "macro_f1": 0.0766,
+      "weighted_f1": 0.077,
+      "confusion_matrix": [
+        [
+          7,
+          8,
+          12,
+          7,
+          6,
+          8,
+          10,
+          9,
+          11,
+          9,
+          15,
+          8
+        ],
+        [
+          8,
+          6,
+          8,
+          14,
+          14,
+          11,
+          8,
+          11,
+          8,
+          8,
+          11,
+          7
+        ],
+        [
+          6,
+          9,
+          11,
+          7,
+          13,
+          11,
+          10,
+          9,
+          8,
+          10,
+          12,
+          10
+        ],
+        [
+          9,
+          11,
+          15,
+          6,
+          9,
+          10,
+          9,
+          5,
+          8,
+          4,
+          11,
+          11
+        ],
+        [
+          10,
+          7,
+          14,
+          5,
+          13,
+          14,
+          15,
+          11,
+          13,
+          7,
+          10,
+          7
+        ],
+        [
+          9,
+          10,
+          12,
+          11,
+          13,
+          9,
+          6,
+          5,
+          13,
+          8,
+          11,
+          11
+        ],
+        [
+          7,
+          10,
+          7,
+          10,
+          18,
+          10,
+          10,
+          9,
+          10,
+          13,
+          7,
+          7
+        ],
+        [
+          5,
+          10,
+          13,
+          12,
+          16,
+          8,
+          9,
+          4,
+          11,
+          6,
+          8,
+          12
+        ],
+        [
+          11,
+          5,
+          15,
+          8,
+          12,
+          14,
+          5,
+          5,
+          7,
+          8,
+          10,
+          12
+        ],
+        [
+          10,
+          3,
+          5,
+          12,
+          14,
+          3,
+          10,
+          13,
+          11,
+          10,
+          8,
+          14
+        ],
+        [
+          12,
+          13,
+          9,
+          4,
+          11,
+          9,
+          7,
+          7,
+          15,
+          8,
+          11,
+          12
+        ],
+        [
+          7,
+          8,
+          23,
+          10,
+          6,
+          9,
+          11,
+          12,
+          5,
+          5,
+          5,
+          13
+        ]
+      ],
+      "top_1_accuracy": 0.0775,
+      "top_3_accuracy": 0.2448,
+      "top_5_accuracy": 0.4113,
+      "per_class_report": {
+        "Applications Developer": {
+          "precision": 0.06930693069306931,
+          "recall": 0.06363636363636363,
+          "f1-score": 0.06635071090047394,
+          "support": 110.0
+        },
+        "CRM Technical Developer": {
+          "precision": 0.06,
+          "recall": 0.05263157894736842,
+          "f1-score": 0.056074766355140186,
+          "support": 114.0
+        },
+        "Database Developer": {
+          "precision": 0.0763888888888889,
+          "recall": 0.09482758620689655,
+          "f1-score": 0.08461538461538462,
+          "support": 116.0
+        },
+        "Mobile Applications Developer": {
+          "precision": 0.05660377358490566,
+          "recall": 0.05555555555555555,
+          "f1-score": 0.056074766355140186,
+          "support": 108.0
+        },
+        "Network Security Engineer": {
+          "precision": 0.0896551724137931,
+          "recall": 0.10317460317460317,
+          "f1-score": 0.0959409594095941,
+          "support": 126.0
+        },
+        "Software Developer": {
+          "precision": 0.07758620689655173,
+          "recall": 0.07627118644067797,
+          "f1-score": 0.07692307692307693,
+          "support": 118.0
+        },
+        "Software Engineer": {
+          "precision": 0.09090909090909091,
+          "recall": 0.0847457627118644,
+          "f1-score": 0.08771929824561403,
+          "support": 118.0
+        },
+        "Software Quality Assurance (QA) / Testing": {
+          "precision": 0.04,
+          "recall": 0.03508771929824561,
+          "f1-score": 0.037383177570093455,
+          "support": 114.0
+        },
+        "Systems Security Administrator": {
+          "precision": 0.058333333333333334,
+          "recall": 0.0625,
+          "f1-score": 0.0603448275862069,
+          "support": 112.0
+        },
+        "Technical Support": {
+          "precision": 0.10416666666666667,
+          "recall": 0.08849557522123894,
+          "f1-score": 0.09569377990430622,
+          "support": 113.0
+        },
+        "UX Designer": {
+          "precision": 0.09243697478991597,
+          "recall": 0.09322033898305085,
+          "f1-score": 0.09282700421940929,
+          "support": 118.0
+        },
+        "Web Developer": {
+          "precision": 0.10483870967741936,
+          "recall": 0.11403508771929824,
+          "f1-score": 0.1092436974789916,
+          "support": 114.0
+        },
+        "accuracy": 0.0774800868935554,
+        "macro avg": {
+          "precision": 0.07668547898780291,
+          "recall": 0.07701511315793028,
+          "f1-score": 0.07659928746361928,
+          "support": 1381.0
+        },
+        "weighted avg": {
+          "precision": 0.07700247682463784,
+          "recall": 0.0774800868935554,
+          "f1-score": 0.07698768296388127,
+          "support": 1381.0
+        }
+      }
+    },
+    "calibration_metrics": {
+      "log_loss": 2.7419,
+      "brier_score": 0.9651
+    },
+    "latency_metrics": {
+      "single_sample_latency_ms": 3.2324,
+      "batch_total_latency_ms": 29.5889,
+      "batch_per_sample_latency_ms": 0.0214
+    },
+    "num_train_samples": 5520,
+    "num_features": 98
+  }
+}

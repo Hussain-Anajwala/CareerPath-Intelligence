@@ -1,0 +1,26 @@
+{
+  "artifact_name": "preprocessor",
+  "version": "v1.0",
+  "file_name": "preprocessor.joblib",
+  "sha256_checksum": "e27c7e2af1a830796f2117c50972ede981379bcf9fe6df512ceba547798f2868",
+  "user_metadata": {
+    "raw_dataset_sha256": "cd9b2d1ce8d1d582f1e472a7dcb2724f687e22ac5932d5760eac95c53d281d62",
+    "train_samples": 5520,
+    "test_samples": 1381,
+    "num_features": 98,
+    "target_classes": [
+      "Applications Developer",
+      "CRM Technical Developer",
+      "Database Developer",
+      "Mobile Applications Developer",
+      "Network Security Engineer",
+      "Software Developer",
+      "Software Engineer",
+      "Software Quality Assurance (QA) / Testing",
+      "Systems Security Administrator",
+      "Technical Support",
+      "UX Designer",
+      "Web Developer"
+    ]
+  }
+}

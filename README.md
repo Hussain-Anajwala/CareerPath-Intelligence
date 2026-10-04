@@ -6,7 +6,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 [![FastAPI](https://img.shields.io/badge/FastAPI-1.0.0-009688.svg)](src/careerpath/api/app.py)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.40%2B-FF4B4B.svg)](app.py)
-[![Tests](https://img.shields.io/badge/tests-44%20passed-success.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-45%20passed-success.svg)](tests/)
 
 ---
 
@@ -116,7 +116,7 @@ python -m pytest
 
 Expected output:
 ```text
-======================== 44 passed in 68.61s ========================
+======================== 45 passed in 68.61s ========================
 ```
 
 ---

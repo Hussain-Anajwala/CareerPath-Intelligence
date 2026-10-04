@@ -1,0 +1,38 @@
+{
+  "model_name": "all-MiniLM-L6-v2",
+  "embedding_dim": 384,
+  "skill_uris": [
+    "http://data.europa.eu/esco/skill/s1",
+    "http://data.europa.eu/esco/skill/s2",
+    "http://data.europa.eu/esco/skill/s3",
+    "http://data.europa.eu/esco/skill/s4",
+    "http://data.europa.eu/esco/skill/s5",
+    "http://data.europa.eu/esco/skill/s6",
+    "http://data.europa.eu/esco/skill/s7",
+    "http://data.europa.eu/esco/skill/s8",
+    "http://data.europa.eu/esco/skill/s9",
+    "http://data.europa.eu/esco/skill/s10",
+    "http://data.europa.eu/esco/skill/s11",
+    "http://data.europa.eu/esco/skill/s12",
+    "http://data.europa.eu/esco/skill/s13",
+    "http://data.europa.eu/esco/skill/s14"
+  ],
+  "skill_labels": [
+    "Network Security",
+    "Information Security",
+    "Penetration Testing",
+    "Cryptography",
+    "Software Development",
+    "Object Oriented Programming",
+    "Web Development",
+    "Mobile Application Development",
+    "Database Management",
+    "Data Analysis",
+    "System Administration",
+    "Technical Support",
+    "Software Testing & Quality Assurance",
+    "CRM Systems Management"
+  ],
+  "model_license": "Apache-2.0 (SentenceTransformers / HuggingFace)",
+  "num_vectors": 14
+}
