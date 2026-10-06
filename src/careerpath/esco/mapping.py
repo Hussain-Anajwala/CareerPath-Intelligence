@@ -21,7 +21,7 @@ class CareerMappingEntry:
 class CareerMapper:
     """Manages explicit mapping between dataset job roles and ESCO taxonomy URIs."""
 
-    # Explicit taxonomy mapping dictionary for the 12 target job roles
+    # Explicit taxonomy mapping dictionary for all 12 dataset target job roles + aliases
     EXPLICIT_MAPPING: Dict[str, Dict[str, Any]] = {
         "Network Security Engineer": {
             "uri": "http://data.europa.eu/esco/occupation/204cfdd8-e4b7-4581-912f-98bcbd87884d",
@@ -39,6 +39,14 @@ class CareerMapper:
             "verification": "VERIFIED",
             "notes": "Direct 1-to-1 match with ESCO occupation title.",
         },
+        "Software Engineer": {
+            "uri": "http://data.europa.eu/esco/occupation/66185ca8-4720-410e-a619-3f040776b9ee",
+            "esco_label": "Software Developer",
+            "status": "EXACT",
+            "confidence": 1.0,
+            "verification": "VERIFIED",
+            "notes": "Mapped to ESCO Software Developer standard.",
+        },
         "Database Administrator": {
             "uri": "http://data.europa.eu/esco/occupation/34b6b6f7-c579-4d6d-b8d9-6014e7a8e2cb",
             "esco_label": "Database Administrator",
@@ -46,6 +54,14 @@ class CareerMapper:
             "confidence": 1.0,
             "verification": "VERIFIED",
             "notes": "Direct 1-to-1 match with ESCO occupation title.",
+        },
+        "Database Developer": {
+            "uri": "http://data.europa.eu/esco/occupation/34b6b6f7-c579-4d6d-b8d9-6014e7a8e2cb",
+            "esco_label": "Database Administrator",
+            "status": "SEMANTIC_MATCH",
+            "confidence": 0.95,
+            "verification": "VERIFIED",
+            "notes": "Mapped to ESCO Database Administrator standard.",
         },
         "Systems Security Administrator": {
             "uri": "http://data.europa.eu/esco/occupation/24d1a084-5f80-4966-9ebf-4f6c12567df4",
@@ -103,6 +119,14 @@ class CareerMapper:
             "verification": "VERIFIED",
             "notes": "Direct 1-to-1 match with ESCO information security analyst.",
         },
+        "Technical Support": {
+            "uri": "http://data.europa.eu/esco/occupation/4c77eaef-7df9-4ee7-a8a4-0e3f00f074d6",
+            "esco_label": "Technical Support Engineer",
+            "status": "SEMANTIC_MATCH",
+            "confidence": 0.95,
+            "verification": "VERIFIED",
+            "notes": "Mapped to ICT support technician / support engineer.",
+        },
         "Technical Support Engineer": {
             "uri": "http://data.europa.eu/esco/occupation/4c77eaef-7df9-4ee7-a8a4-0e3f00f074d6",
             "esco_label": "Technical Support Engineer",
@@ -111,6 +135,14 @@ class CareerMapper:
             "verification": "VERIFIED",
             "notes": "Mapped to ICT support technician / support engineer.",
         },
+        "Software Quality Assurance (QA) / Testing": {
+            "uri": "http://data.europa.eu/esco/occupation/e56598c9-0a6e-4171-87ab-8f9216016df3",
+            "esco_label": "Quality Assurance Engineer",
+            "status": "EXACT",
+            "confidence": 1.0,
+            "verification": "VERIFIED",
+            "notes": "Mapped to ESCO software QA engineer.",
+        },
         "Quality Assurance Engineer": {
             "uri": "http://data.europa.eu/esco/occupation/e56598c9-0a6e-4171-87ab-8f9216016df3",
             "esco_label": "Quality Assurance Engineer",
@@ -118,6 +150,14 @@ class CareerMapper:
             "confidence": 1.0,
             "verification": "VERIFIED",
             "notes": "Direct 1-to-1 match with ESCO software QA engineer.",
+        },
+        "UX Designer": {
+            "uri": "http://data.europa.eu/esco/occupation/1a8813a3-79d5-4513-8fb0-45db62d0df82",
+            "esco_label": "Web & User Experience Designer",
+            "status": "SEMANTIC_MATCH",
+            "confidence": 0.90,
+            "verification": "VERIFIED",
+            "notes": "Mapped to ESCO web/UI designer specialization.",
         },
     }
 

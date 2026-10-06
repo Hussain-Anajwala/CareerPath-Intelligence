@@ -211,17 +211,16 @@ with p_col2:
             missing = r.get("missing_skills", [])
             total_req = len(matched) + len(partial) + len(missing)
 
-            alignment_tier = (
-                "Strong alignment"
+            ranking_label = (
+                "Top Model Recommendation"
                 if rank == 1
-                else ("Good alignment" if rank == 2 else "Moderate alignment")
+                else f"Ranked #{rank} by Model"
             )
 
-            match_summary = (
-                f"{len(matched)} of {total_req} skills matched"
-                if total_req > 0
-                else f"{len(matched)} skills matched"
-            )
+            if total_req > 0:
+                match_summary = f"{len(matched)} of {total_req} skills matched"
+            else:
+                match_summary = "ESCO coverage unavailable"
 
             st.markdown(
                 f"""
@@ -230,7 +229,7 @@ with p_col2:
                         <div>
                             <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 700; color: #1E40AF;">#{rank}</span>
                             <span style="font-size: 1.08rem; font-weight: 700; color: #131B2E; margin-left: 6px;">{role}</span>
-                            <span style="margin-left: 10px; font-size: 0.78rem; font-weight: 600; color: #1E40AF; background-color: #F2F3FF; border: 1px solid #DBE1FF; padding: 2px 8px; border-radius: 4px;">{alignment_tier}</span>
+                            <span style="margin-left: 10px; font-size: 0.78rem; font-weight: 600; color: #1E40AF; background-color: #F2F3FF; border: 1px solid #DBE1FF; padding: 2px 8px; border-radius: 4px;">{ranking_label}</span>
                         </div>
                         <div style="font-size: 0.86rem; font-weight: 600; color: #444653;">
                             {match_summary}
